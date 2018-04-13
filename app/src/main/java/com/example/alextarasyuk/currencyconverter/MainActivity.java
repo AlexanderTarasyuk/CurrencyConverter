@@ -48,10 +48,36 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         setupViews();
-        setupListeners();
         mCurrencyConverterService = new CurrencyConverterServiceImpl().getCurrencyConverterService();
+
+        if (savedInstanceState != null) {
+            mTextView.setText(savedInstanceState.getString("TextView").toString());
+            mButtonValueFromConverted.setText(savedInstanceState.getString("Value to be converted"));
+            mButtonToConvert.setText(savedInstanceState.getString("Value  converted"));
+        }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        setupListeners();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        unRegisterListeners();
+
+    }
+
+    private void unRegisterListeners() {
+        mButtonCleanTextView.setOnClickListener(null);
+        mButtonToConvert.setOnClickListener(null);
+        mButtonStardConvert.setOnClickListener(null);
+        mButtonValueFromConverted.setOnClickListener(null);
+        mButtonDelete.setOnClickListener(null);
+
     }
 
     private void setupListeners() {
@@ -69,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (!mButtonValueFromConverted.getText().toString().isEmpty()) {
-                    String toset = mTextView.getText().toString().trim();
+                    String toset = mTextView.getText().toString().substring(0, mTextView.getText().toString().length() - 1);
                     mButtonValueFromConverted.setText(toset);
                 } else {
                     mTextView.setText("0.000");
@@ -158,11 +184,9 @@ public class MainActivity extends AppCompatActivity {
                             mTextView.setTextSize(28f);
                         }
                         mTextView.setHint("= " + String.format(Locale.getDefault(), "%.4f", mConvertedDoubleValue));
-                    } catch (IOException e) {
+                    } catch (Exception e) {
                         e.printStackTrace();
 
-                    } catch (JSONException e) {
-                        e.printStackTrace();
                     }
                 }
 
@@ -186,6 +210,15 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
         return false;
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putString("TextView", mTextView.getText().toString());
+        outState.putString("Value to be converted", mButtonValueFromConverted.getText().toString());
+        outState.putString("Value  converted", mButtonToConvert.getText().toString());
     }
 
     public void input(View view) {

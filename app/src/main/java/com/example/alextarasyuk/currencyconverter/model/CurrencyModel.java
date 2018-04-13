@@ -1,10 +1,13 @@
 package com.example.alextarasyuk.currencyconverter.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
-public class CurrencyModel implements Serializable {
+public class CurrencyModel implements Parcelable {
 
     private String base;
     private String date;
@@ -41,5 +44,15 @@ public class CurrencyModel implements Serializable {
 
     public void setRates(List<Map<String, Double>> rates) {
         this.rates = rates;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+
     }
 }
