@@ -22,6 +22,23 @@ public class CurrencyModel implements Parcelable {
         this.rates = rates;
     }
 
+    protected CurrencyModel(Parcel in) {
+        base = in.readString();
+        date = in.readString();
+    }
+
+    public static final Creator<CurrencyModel> CREATOR = new Creator<CurrencyModel>() {
+        @Override
+        public CurrencyModel createFromParcel(Parcel in) {
+            return new CurrencyModel(in);
+        }
+
+        @Override
+        public CurrencyModel[] newArray(int size) {
+            return new CurrencyModel[size];
+        }
+    };
+
     public String getBase() {
         return base;
     }
@@ -53,6 +70,7 @@ public class CurrencyModel implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-
+        dest.writeString(base);
+        dest.writeString(date);
     }
 }
